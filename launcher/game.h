@@ -38,9 +38,11 @@ inline constexpr const char* kVersion = RECOMP_VERSION_STR;
 inline constexpr const char* kArtKicker = "GUITAR HERO";
 inline constexpr const char* kArtTitle = "Smash Hits";
 // The mark in the header's logo while the game's icon is unknown: an icon's SVG paths in a 24-unit box, stroked as the
-// launcher's icons are (ui.cpp). A disc, until the game has its own.
+// launcher's icons are (ui.cpp). A guitar pick with a star (the mockup's, local_docs/launcher_design; GH5's and GH
+// Warriors of Rock's too).
 inline constexpr const char* kBrandIcon =
-    "<circle cx='12' cy='12' r='9'/><circle cx='12' cy='12' r='2.5'/><path d='M12 3a9 9 0 0 1 9 9'/>";
+    "<path d='M12 21c-4-4-8-9-8-13 0-3 4-5 8-5s8 2 8 5c0 4-4 9-8 13z'/>"
+    "<path d='M12 6.5l1.2 2.6 2.8.3-2.1 1.9.6 2.8-2.5-1.4-2.5 1.4.6-2.8-2.1-1.9 2.8-.3z'/>";
 // The header's name beside the logo, on two lines (in capitals); an empty title: the art's (kArtTitle) alone.
 inline constexpr const char* kBrandTitle = "GUITAR HERO";
 inline constexpr const char* kBrandSubtitle = "Smash Hits";
