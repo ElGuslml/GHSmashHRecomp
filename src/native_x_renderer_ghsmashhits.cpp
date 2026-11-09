@@ -155,6 +155,11 @@ const native_x_renderer::Profile& NativeXRendererProfile() {
     // The ultrawide hooks (src/widescreen.cpp) widen the 16:9 cameras by AspectFactor() and keep the 2D layer at
     // 16:9 in the center: NativeXRenderer may fill a wider output (native_x_renderer_fill_screen).
     p.widens_cameras = true;
+    // The post-processing works on reduced copies of the scene (D127), GH Metallica's: the 640x360 4x MSAA resolve of
+    // the 1280x720 scene, then 320x180 targets for the glow pass, the bright pass, and the bloom's and the depth of
+    // field's separable 16-tap blurs (offsets and weights in c64-c95 for 320x180 texels). At the render scale those
+    // offsets skip host texels (GH Metallica's bloom showed a lattice): they stay at 1x, as on the console.
+    p.unscaled_screen_fractions = true;
     // The pipeline list (D129): every shader the game has is in DATA/FXFILES/MaterialLibrary.bin.xen, as in GH
     // Metallica (NativeXRenderer's D129, D133).
     static const char* const kShaderFiles[] = {"DATA/FXFILES/MaterialLibrary.bin.xen"};

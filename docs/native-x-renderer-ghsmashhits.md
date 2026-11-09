@@ -30,6 +30,16 @@ here; only the addresses differ. `--native_x_renderer=false` or the launcher's X
 387 of 387; no render state, fetch or constant mismatch. In a song 540 to 750 draws a frame, none failed; 8.33 ms frames
 (8.85 ms the longest in 5 s), 1.52 cores; no placeholder texture. The stage widened, the highway and the HUD at 16:9.
 
+## The bloom's reduced copies (D127)
+
+GH Metallica's post-processing, the same here: the scene resolved to 640x360, then 320x180 targets for the glow and
+bright passes and the bloom's and depth of field's 16-tap blurs, whose tap offsets are computed for 320x180 texels. At a
+render scale above 1x those offsets skip texels, and GH Metallica's bloom showed a lattice of dots (its
+`docs/bloom-lattice.md`). The profile sets `unscaled_screen_fractions` (2026-11-08): the surfaces of the output divided
+by a whole number stay at the game's resolution, as on the console. Checked: at 2560x1440 the log names the 320x180
+targets as reduced copies drawn at 320x180, no error; the glow not yet looked at closely in a song.
+`--native_x_renderer_unscaled_screen_fractions=false` scales them again.
+
 ## Not checked
 
 The note highway's two shaders named in `AdjustHighwayMotion` (frame generation's motion, D124, hidden in the launcher)
