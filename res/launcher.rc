@@ -1,0 +1,43 @@
+// Resources of "GH Smash Hits Launcher.exe": icon (res/icon.ico, when present), file properties, and the launcher's fonts
+// (recomp_launcher/fonts) and art (launcher/art), found through the include directories (RecompLauncher.cmake).
+#include <winver.h>
+#include "version.h"
+#include "launcher_version.h"
+#include "resources.h"
+
+#ifdef RECOMP_HAS_ICON
+1 ICON "icon.ico"
+#endif
+
+IDR_FONT_REGULAR RCDATA "fonts/SourceSans3-Regular.ttf"
+IDR_FONT_MEDIUM RCDATA "fonts/SourceSans3-Medium.ttf"
+IDR_FONT_SEMIBOLD RCDATA "fonts/SourceSans3-SemiBold.ttf"
+IDR_FONT_BOLD RCDATA "fonts/SourceSans3-Bold.ttf"
+IDR_FONT_DISPLAY_MEDIUM RCDATA "fonts/Oswald-Medium.ttf"
+IDR_FONT_DISPLAY_SEMIBOLD RCDATA "fonts/Oswald-SemiBold.ttf"
+IDR_FONT_DISPLAY_BOLD RCDATA "fonts/Oswald-Bold.ttf"
+IDR_ART_BACKGROUND RCDATA "art/background.svg"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION RECOMP_LAUNCHER_VERSION
+PRODUCTVERSION RECOMP_VERSION
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904B0"
+    BEGIN
+      VALUE "FileDescription", "GH Smash Hits Launcher - options for GHSmashHRecomp"
+      VALUE "FileVersion", RECOMP_LAUNCHER_VERSION_STR
+      VALUE "ProductName", "GHSmashHRecomp"
+      VALUE "ProductVersion", RECOMP_VERSION_STR
+      VALUE "OriginalFilename", "GH Smash Hits Launcher.exe"
+      VALUE "LegalCopyright", "GHSmashHRecomp code: MIT License."
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1200
+  END
+END

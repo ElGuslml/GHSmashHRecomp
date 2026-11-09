@@ -1,0 +1,282 @@
+# ghsmashhits_functions.toml - Manual corrections for the analyzer (default.xex): functions it missed, [[switch_tables]] the
+# codegen mistranslates and [[midasm_hook]]s into src/. KameoRecomp's kameo_functions.toml, POTCAWERecomp's
+# potcawe_functions.toml and GRAWRecomp's yeti_functions.toml have examples of each.
+
+# The C runtime's setjmp and longjmp (sub_82530470 saves f14-f31, r13-r31, v64-v127, r1, LR and CR in the jmp_buf;
+# sub_8252FF30 unwinds to it and loads them back), the same code as in KameoRecomp. The codegen turns calls to them
+# into the host's setjmp and longjmp, keyed by the guest jmp_buf; translated as plain functions, longjmp would load
+# the registers and return to its caller instead of jumping. Only the image decoders use them: libjpeg
+# (sub_821E06C0: setjmp at its error manager + 144, where its error function sub_821DF770 longjmps back) and libpng
+# (sub_821E08E0, sub_821F4148: setjmp at the start of the png struct, longjmp from sub_821F23C0 and sub_821DF838).
+setjmp_address = 0x82530470
+longjmp_address = 0x8252FF30
+
+# Codegen: the registers no call passes on are local variables of each function, not fields of the PPCContext, so
+# the compiler keeps them in host registers and the __savegprlr/__restgprlr helpers are elided, as in KameoRecomp,
+# GRAWRecomp and POTCAWERecomp. non_argument_as_local (r0, r2, r11, r12) stays off: the SEH funclets read r12, which
+# the SDK does not pass them. The non-volatile vector registers stay in the context (SDK change 42): this game's
+# compiler passes values to its callees in them, outside the calling convention. sub_82699CD0, sub_8269B798 and
+# sub_8269D948 set v92 (vor128 v92,v12,v12) and call sub_82699630, whose callees sub_826A16E0, sub_826A19C8 and
+# sub_826A1E08 read it without writing it (vmsum4fp128 v23,v92,v24); as local variables v92 would be unset there.
+non_volatile_as_local = true
+non_volatile_vectors_as_local = false
+cr_as_local = true
+ctr_as_local = true
+xer_as_local = true
+reserved_as_local = true
+
+[functions]
+# The functions that call setjmp keep their registers in the context (share_registers): the host longjmp returns
+# into their C++ frame, and the codegen restores the context it saved at the setjmp, not local variables. The guest
+# longjmp loaded r14-r31 with their values at the setjmp. None of them calls longjmp itself, so their ends (from
+# .pdata) do not move.
+0x821E06C0 = { share_registers = true }   # libjpeg's guard
+0x821E08E0 = { share_registers = true }   # libpng's guards
+0x821F4148 = { share_registers = true }
+# Branch (b) targets that the automatic analysis did not assign to any function. All are small functions
+# reached only through tail calls, each right after an unconditional end (b, bctr, blr): virtual call thunks
+# (lwz r11,0(r3) / lwz r10,N(r11) / mtctr / bctr), setters and a null check before a tail call.
+0x82357A88 = {}   # branched to from 0x82416A50 (r3 and r4 swapped; sets or clears a bit of +102)
+0x8238BB28 = {}   # branched to from 0x823C52D4 (virtual call thunk, slot 108)
+0x8238BBB8 = {}   # branched to from 0x823C54FC (virtual call thunk, slot 156)
+0x82478EA0 = {}   # branched to from 0x82333EEC and 0x82333F08 (sets the byte at +241)
+0x82685BB0 = {}   # branched to from 0x8256C940 (null check, then b 0x82533920)
+
+# The game's threads wait without spinning (src/thread_waits.cpp): four loops checked a condition again and
+# again and kept a core at 100 % each (the three job workers, the main thread at the start of a frame and while
+# it waits for the render thread, the render thread waiting for the vertical blank). Each hook spins briefly and then sleeps between checks;
+# ghsmashhits_wait_sleep_us = 0 disables them. With ghsmashhits_wait_smart (on) the workers block on the job event,
+# the render thread sleeps until shortly before the vertical blank, and the main thread waiting for a job group
+# (sub_822BBBD0) watches the group's count between passes instead of taking the queue's lock again at once.
+[[midasm_hook]]
+address = 0x82426938   # li r4,0 (sub_824268D8: a job worker with an empty queue, before WaitForSingleObject(event, 0))
+name = "GHSmashHitsJobWaitHook"
+# A job queued pulses the manual-reset job event (sub_822BB860), which woke every waiting worker for one job: with
+# ghsmashhits_job_wake_one the hook wakes one waiting worker itself and the pulse is skipped.
+[[midasm_hook]]
+address = 0x822BB860   # lis r11,-32087 (sub_822BB860: lwz r3,-11516(r11), the job event at 0x82A8D304; b sub_82544A60, PulseEvent)
+name = "GHSmashHitsJobPulseHook"
+return_on_true = true
+[[midasm_hook]]
+address = 0x822E5510   # cmplwi cr6,r3,0 (sub_822E5498: while (sub_8243D298(0x82C12778) != 0) {})
+name = "GHSmashHitsFrameWaitHook"
+registers = ["r3"]
+[[midasm_hook]]
+address = 0x822E1B54   # cmplw cr6,r11,r10 (sub_822E1B20: while (frames[24] == frames[20]) {}, waiting for the render thread)
+name = "GHSmashHitsRenderWaitHook"
+registers = ["r11", "r10"]
+[[midasm_hook]]
+address = 0x8241D754   # cmpld cr6,r3,r11 (sub_8241D640: until the vertical blank counter reaches the next value)
+name = "GHSmashHitsVblankWaitHook"
+registers = ["r3", "r11"]
+[[midasm_hook]]
+address = 0x8241D89C   # cmpld cr6,r3,r30 (sub_8241D640: until the other counter reaches the frame's last vertical blank)
+name = "GHSmashHitsVblankWait2Hook"
+registers = ["r3", "r30"]
+# The game's two callbacks advance the counters those loops wait on: an event set right after each advance wakes the
+# waiting render thread at once (src/thread_waits.cpp).
+[[midasm_hook]]
+address = 0x822D1C1C   # lwz r10,40(r11) (sub_822D1BE0, the swap callback: after the swap counter 0x82A92330's advance)
+name = "GHSmashHitsSwapSignalHook"
+[[midasm_hook]]
+address = 0x822D1BCC   # mftb r4 (sub_822D1B98, the vertical blank callback: after the counter 0x82A92320's advance)
+name = "GHSmashHitsVblankSignalHook"
+[[midasm_hook]]
+address = 0x822BBC44   # lwz r11,20(r29) (sub_822BBBD0: the main thread waiting for a job group, after a pass)
+name = "GHSmashHitsJobGroupWaitHook"
+registers = ["r29", "r30"]
+# The D3D library's six waits for the GPU (fences, the present, ...) call sub_821C6928 for every check: at 120 FPS
+# the render thread spent half its time there.
+[[midasm_hook]]
+address = 0x821C6928   # mflr r12 (entry of sub_821C6928: a check of a wait for the GPU, its condition still false)
+name = "GHSmashHitsGpuWaitHook"
+
+# Songs in sync with their audio (src/timer.cpp): the engine's timer replaces the 50,000,000 Hz that
+# KeQueryPerformanceFrequency reports by the original console's real timebase rate, 49,875,000; the SDK's timebase
+# runs at 50 MHz, so the game's clock ran 0.25 % fast and the notes drifted ahead of the audio.
+# ghsmashhits_timer_fix = false disables it.
+[[midasm_hook]]
+address = 0x822D1F70   # cmplw cr6,r11,r6 (sub_822D1ED0: r11 = the reported frequency, r6 = 50,000,000)
+name = "GHSmashHitsTimerFrequencyHook"
+registers = ["r6"]
+
+
+# Quitting from the title screen and the main menu (src/quit_prompt.cpp): once per frame, the hook looks the screens'
+# own elements up in the game's element table and offers the SDK's quit prompt (B) while one exists.
+[[midasm_hook]]
+address = 0x822E5504   # stfd f0,2448(r7) (sub_822E5498: the main thread's frame, before its wait)
+name = "GHSmashHitsQuitPromptHook"
+
+# A slot's kind of controller (a guitar, the drums, the singer) follows the controller played (src/players.cpp): the
+# game asks for it only when the port's controller connects, and the keyboard shares slot 0 with the first controller.
+[[midasm_hook]]
+address = 0x8239EAC8   # mflr r12 (entry of sub_8239EAC8: a controller port's update, each frame; r3 = the port)
+name = "GHSmashHitsControllerPortHook"
+registers = ["r3"]
+
+# Ultrawide (src/widescreen.cpp), with ghsmashhits_ultrawide: the projection of every 16:9 view is widened (Hor+: the
+# 3D views see more at the sides; their aspect ratio is the view's size, not the SetScreen aspect), and the screen
+# elements' vertices (pixels of the 1280x720 canvas) are narrowed around the center just before they are drawn to the
+# screen (the menus, the HUD, the note highway and its notes stay 16:9), with the clip windows they draw through.
+[[midasm_hook]]
+address = 0x82356DA8   # entry of sub_82356DA8, a perspective projection from its frustum (f1-f4: left, right, bottom, top)
+name = "GHSmashHitsFrustumHook"
+registers = ["f1", "f2", "f3", "f4"]
+[[midasm_hook]]
+address = 0x82422B20   # bl DrawVerticesUP in sub_82422908 (a sprite's quad: r6 = its vertices, r7 = their stride)
+name = "GHSmashHitsSpriteHook"
+registers = ["r6", "r7"]
+[[midasm_hook]]
+address = 0x82466618   # bl DrawVerticesUP in sub_82466128 (another element's quad: the loading screen's layers)
+name = "GHSmashHitsElementQuadHook"
+registers = ["r6", "r7"]
+[[midasm_hook]]
+address = 0x82455930   # bl DrawVerticesUP in sub_82455858 (a batch of quads: r5 = vertices, r6 = data, r7 = stride)
+name = "GHSmashHitsSpriteBatchHook"
+registers = ["r5", "r6", "r7"]
+[[midasm_hook]]
+address = 0x8242192C   # bl SetScissorRect in sub_824217C8 (a screen element's clip window: r4 = {x1, y1, x2, y2})
+name = "GHSmashHitsClipWindowHook"
+registers = ["r4"]
+[[midasm_hook]]
+address = 0x821B6954   # bl DrawVerticesUP in sub_821B5E90 (a sustained note's tail: r5 = vertices, r6 = data, r7 = stride)
+name = "GHSmashHitsTailHook"
+registers = ["r5", "r6", "r7"]
+[[midasm_hook]]
+address = 0x821B4378   # bl EndVertices in sub_821B3DB8 (a sprite drawn as a grid of quads, the highway's board: r3 = device)
+name = "GHSmashHitsMeshSpriteHook"
+registers = ["r3"]
+[[midasm_hook]]
+address = 0x821B8A2C   # bl DrawVerticesUP in sub_821B88E0 (a 2D particle's quad: r5 = vertices, r6 = data, r7 = stride)
+name = "GHSmashHitsParticleHook"
+registers = ["r5", "r6", "r7"]
+
+
+# Frame rates above 60 (src/framerate.cpp, ghsmashhits_frame_rate_fix): the engine's clocks counted in vertical blanks
+# divide by its vertical blanks per second (the global 0x82838E88, 60): the divisions use it times the emulated
+# vblank's rate over 60, so those clocks keep their speed (no visible case known).
+[[midasm_hook]]
+address = 0x824B2C40   # extsw r8,r30 (sub_824B2AD8: a vblank clock's vblanks into seconds, r30 = vblanks per second)
+name = "GHSmashHitsVblankClockHook"
+registers = ["r30"]
+[[midasm_hook]]
+address = 0x824B2EC8   # extsw r11,r30 (sub_824B2AD8: seconds back into vblanks, r30 = vblanks per second)
+name = "GHSmashHitsVblankClockHook"
+registers = ["r30"]
+[[midasm_hook]]
+address = 0x822D1D18   # extsw r5,r10 (sub_822D1CF8: the frame's vblanks into its time, r10 = vblanks per second)
+name = "GHSmashHitsVblankFrameTimeHook"
+registers = ["r10"]
+# Script waits counted in game frames ("Wait N gameframes"): above 60 Hz they last the console's N / 60 s.
+[[midasm_hook]]
+address = 0x8242AE68   # entry of sub_8242AE68 (a type 1 game-frame wait set: r3 = the wait, r4 = N)
+name = "GHSmashHitsFrameWaitSetHook"
+registers = ["r3", "r4"]
+[[midasm_hook]]
+address = 0x8242AE18   # entry of sub_8242AE18 (a type 8 game-frame wait set: r3 = the wait, r4 = N)
+name = "GHSmashHitsFrameWaitSetHook"
+registers = ["r3", "r4"]
+[[midasm_hook]]
+address = 0x8242B1AC   # addi r11,r11,-1 (sub_8242B168: a game-frame wait's count above 0, r3 = the wait)
+name = "GHSmashHitsFrameWaitCountHook"
+registers = ["r3", "r11"]
+# Button presses polled by scripts (ControllerMake) last one frame: a script whose waits are held above 60 Hz is given
+# the presses of the frames it skipped.
+[[midasm_hook]]
+address = 0x8239C7AC   # bgt cr6 (sub_8239C5E8: a controller's input state updated, r30 = the state, r9 = the pressed bits)
+name = "GHSmashHitsInputUpdateHook"
+registers = ["r30", "r9"]
+[[midasm_hook]]
+address = 0x823B7D50   # entry of sub_823B7D50 (the script function ControllerMake: r4 = the script)
+name = "GHSmashHitsButtonPollHook"
+registers = ["r4"]
+[[midasm_hook]]
+address = 0x823B7E10   # addi r1,r1,112 (sub_823B7D50's exit, every path)
+name = "GHSmashHitsButtonPollEndHook"
+# The whammy on a sustain is told by the frame (the bar's movement since the previous frame, a countdown of 5 frames,
+# 5 frames in a row to turn a star power sustain blue or back): above 60 Hz over a 60th of a second and 5 / 60 s.
+[[midasm_hook]]
+address = 0x82137B50   # mflr r12 (sub_82137B50: a player's update in a song, every frame; src/keyboard.cpp)
+name = "GHSmashHitsSongFrameHook"
+[[midasm_hook]]
+address = 0x82143310   # fsubs f13,f30,f13 (sub_821431A0, a guitar: the bar's position minus the previous frame's)
+name = "GHSmashHitsWhammyHook"
+registers = ["r30", "f30", "f13"]
+[[midasm_hook]]
+address = 0x8214340C   # fsubs f12,f30,f0 (sub_821431A0, another controller: the first axis minus the previous frame's)
+name = "GHSmashHitsWhammyHook"
+registers = ["r30", "f30", "f0"]
+[[midasm_hook]]
+address = 0x82143420   # fsubs f0,f29,f0 (sub_821431A0, another controller: the second axis minus the previous frame's)
+name = "GHSmashHitsWhammy2Hook"
+registers = ["r30", "f29", "f0"]
+[[midasm_hook]]
+address = 0x8214619C   # fsubs f13,f0,f13 (sub_82146020, the touch strip: its position minus the previous frame's)
+name = "GHSmashHitsWhammyHook"
+registers = ["r31", "f0", "f13"]
+[[midasm_hook]]
+address = 0x82143340   # stwx r10,r30,r8 (sub_821431A0: the whammy countdown, 5 frames)
+name = "GHSmashHitsWhammyCountdownHook"
+registers = ["r10"]
+[[midasm_hook]]
+address = 0x82143440   # lfs f13,11296(r8) (sub_821431A0: r10 = 5, the countdown both axes store)
+name = "GHSmashHitsWhammyCountdownHook"
+registers = ["r10"]
+[[midasm_hook]]
+address = 0x821461C8   # stwx r9,r31,r8 (sub_82146020: the whammy countdown, 5 frames)
+name = "GHSmashHitsWhammyCountdownHook"
+registers = ["r9"]
+[[midasm_hook]]
+address = 0x82146400   # cmpwi cr6,r11,5 (sub_82146200: frames in a row of whammying)
+name = "GHSmashHitsWhammyStateHook"
+registers = ["r11"]
+[[midasm_hook]]
+address = 0x821464DC   # cmpwi cr6,r11,5 (sub_82146200: frames in a row of not whammying)
+name = "GHSmashHitsWhammyStateHook"
+registers = ["r11"]
+# The guitars' strings vibrate at 62 Hz, which 60 FPS shows as a 2 Hz wobble, and fade 0.99 a frame: above 60 Hz the
+# wobble 60 FPS shows and the fade per 60th of a second (GH Metallica's).
+[[midasm_hook]]
+address = 0x82121E58   # lis r11,-32254 (sub_82121DD8, after the call returning the strings' frequency, 62 Hz)
+name = "GHSmashHitsStringFrequencyHook"
+registers = ["f1"]
+[[midasm_hook]]
+address = 0x8211CCAC   # lwz r11,252(r31) (sub_8211CC70, after the call returning the strings' fade, 0.99 a frame)
+name = "GHSmashHitsStringFadeHook"
+registers = ["f1"]
+# Havok's world is stepped by a fixed 1/60 s each frame: above 60 Hz by the frame's own time (GH Metallica's).
+[[midasm_hook]]
+address = 0x823B87D4   # fmuls f1,f1,f31 (sub_823B8788, after lfs f31,11492(r11): the world's step, 1/60 s)
+name = "GHSmashHitsPhysicsStepHook"
+registers = ["f31"]
+# The loading screen's animations step by the frame: above 60 Hz the steps are scaled by 60 / the rate.
+[[midasm_hook]]
+address = 0x824C3C7C   # after lfd f31,4528(r10) (sub_824C3B68: the boot's spinning star, f31 = its turn each frame, 0.06 radians)
+name = "GHSmashHitsLoadingStarHook"
+registers = ["f31"]
+[[midasm_hook]]
+address = 0x823F950C   # add r11,r10,r11 (sub_823F94C0: DisplayLoadingScreen's icon, its angle plus its step, r10 = the step in degrees)
+name = "GHSmashHitsLoadingSpinnerHook"
+registers = ["r10"]
+[[midasm_hook]]
+address = 0x824C4108   # fadds f0,f0,f29 (sub_824C3EE0's mode 2: a wave's phase plus its step, f29)
+name = "GHSmashHitsLoadingWaveHook"
+registers = ["f29"]
+[[midasm_hook]]
+address = 0x824C4118   # fadds f0,f13,f0 (sub_824C3EE0's mode 2: the other phase plus its step, f0)
+name = "GHSmashHitsLoadingWaveHook"
+registers = ["f0"]
+
+# The screen effects each turned off by an option (src/screen_fx.cpp, ghsmashhits_fx_*): the effects' composite
+# (sub_8251FA60) picks its shader variant and sets each effect's constants by a mask, one bit per effect.
+[[midasm_hook]]
+address = 0x8251FC88   # mr r11,r24 (sub_8251FA60), after lwz r31,12(r25): r31 = the effects' mask
+name = "GHSmashHitsScreenFxMaskHook"
+registers = ["r31"]
+
+# The game's territory (src/region.cpp): XGetGameRegion's answer, which the SDK gives as the rest of the world for every
+# game, as a console in America gives it: this game's name on its title screen and its legal screens depend on it.
+[[midasm_hook]]
+address = 0x82382CEC   # rlwinm r11,r3,24,24,31 (sub_82382C20: r3 = XGetGameRegion's answer, its high byte the territory)
+name = "GHSmashHitsGameRegionHook"
+registers = ["r3"]
