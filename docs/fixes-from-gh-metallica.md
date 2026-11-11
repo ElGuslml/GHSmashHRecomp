@@ -1,6 +1,7 @@
 # The fixes ported from GH Metallica
 
-**Status: ported on 2026-11-05; checked here, not played by hand yet.** Guitar Hero: Smash Hits is Guitar Hero:
+**Status: ported on 2026-11-05; played with an Xbox 360 guitar (2026-11-09: songs at 160 FPS, NativeXRenderer, ultrawide; the
+languages, Low latency audio and the installation from an ISO tried too). Drums and singing not tried yet.** Guitar Hero: Smash Hits is Guitar Hero:
 Metallica's engine (the executable `gh4_2_Final.exe`, between Metallica's `gh4_1_burn_Final.exe` and Van Halen's
 `gh4_3_Final.exe`; all XDK 2.0.7978), by another studio: 99.8 % of its functions have the same instructions as in GH
 Metallica (98.9 % between GH Metallica and GH Van Halen), and 97 % of its scripts exist there, 91 % of those
@@ -71,7 +72,7 @@ past Windows' audio engine, with 10 ms kept in the device's buffer (`audio_wasap
 game's frames queued instead of 4 (`audio_wasapi_exclusive_queue`). Measured in GH Metallica on a Focusrite Scarlett
 2i2, from the game's frame to the driver playing it: 77 ms shared, 20 ms exclusive. Other programs cannot play on that
 device while the game runs; when it is busy or refuses, the shared output is used (the log says which). Calibrate the
-audio again after turning it on or off.
+audio again after turning it on or off. Tried in this game by Gustavo (2026-11-09).
 
 ## V-Sync
 
@@ -232,7 +233,7 @@ Metallica's) in the element table at `0x82AAF888`.
 ## Language
 
 The game has no language menu: it picks its text pack from `XGetLanguage` (French, German, Italian, Spanish, English
-otherwise). The launcher's language row sets it.
+otherwise). The launcher's language row sets it. Tried in this game by Gustavo (2026-11-09).
 
 ## The job queue's lock and wake-ups (2026-11-08, from GH Metallica)
 

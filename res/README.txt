@@ -1,56 +1,135 @@
 GHSmashHRecomp {VERSION} - Guitar Hero: Smash Hits (Xbox 360), for Windows
-========================================================================
+==========================================================================
 
 A static recompilation of the Xbox 360 game to native Windows. The game's code is already translated and
-compiled into GHSmashHitsRecomp.exe: you do not need to compile anything. You do need your own copy of the game,
-because this package contains no game files.
+compiled into GHSmashHitsRecomp.exe: you do not need to compile anything. You do need your own copy of the
+game, because this package contains no game files.
 
-This is an early test build. Not affiliated with Microsoft or the game's developer and publisher.
+This is a beta. Not affiliated with Microsoft, Activision, the game's developers or the artists whose songs
+are in it.
 
 
 REQUIREMENTS
 
 - Windows 10 or 11, 64-bit.
-- A GPU with up-to-date drivers that support Direct3D 12 or Vulkan.
+- A GPU with up-to-date drivers that support Vulkan (NativeXRenderer, the default renderer) or
+  Direct3D 12 (the Xenos renderer).
 - A CPU with SSE4.2 (practically any 64-bit CPU from 2009 on).
 - Microsoft Visual C++ Redistributable 2015-2022 (x64). Most PCs already have it. If Windows says that
   MSVCP140.dll or VCRUNTIME140.dll is missing, install it from:
   https://aka.ms/vs/17/release/vc_redist.x64.exe
+- Your Guitar Hero: Smash Hits disc as an ISO file (tested with the USA disc; about 2.9 GB once installed).
+- An Xbox 360 guitar. Any other controller works as a guitar too, and so does the keyboard.
+- To sing (experimental): any microphone connected to the PC, and a controller for the singer.
 
 
 INSTALLATION
 
-1. Extract this zip to any folder, for example C:\Games\GHSmashHRecomp.
+1. Either run the installer (GHSmashHRecomp-{VERSION}-setup.exe: it installs for your Windows user, without
+   administrator rights), or extract this zip to any folder, for example C:\Games\GHSmashHRecomp.
 
-2. Copy the contents of your Guitar Hero: Smash Hits (Xbox 360) disc into the "assets" folder, so that this file
-   exists:
+2. Run "GH Smash Hits Launcher.exe". The first time, it asks for your Xbox 360 ISO, checks that it is the right
+   game and extracts its files next to the launcher, then asks you to create your profile (your saves,
+   achievements and playtime, shared with the other ElGus Recomps launchers). You only do this once.
 
-       assets\default.xex
+   You can also copy the game files yourself instead: put the contents of the disc into the "assets"
+   folder, so that assets\default.xex exists (extract-xiso, https://github.com/XboxDev/extract-xiso/releases,
+   gets them out of an ISO).
 
-   Copy everything from the disc. To get the files from a disc image (ISO), use extract-xiso
-   (https://github.com/XboxDev/extract-xiso/releases) or ABGX360.
+3. Choose your options and press PLAY. Next time you can start GHSmashHitsRecomp.exe directly: it uses the
+   options you saved.
 
-3. Run "GH Smash Hits Launcher.exe", choose your options and press Play. Next time you can start GHSmashHitsRecomp.exe directly:
-   it uses the options you saved.
+4. Calibrate: in the game's options, run the audio and video calibration once, so that the notes match what
+   you hear on your own speakers or headphones.
 
-If the game files are missing, GHSmashHitsRecomp.exe tells you where it expected them. If your default.xex is not the version
-this build was made from (CRC32 97891B27), it warns you: a different version will most likely crash.
+If your default.xex is not the version this build was made from (CRC32 97891B27), the game warns you: a
+different version will most likely crash.
 
 
 "WINDOWS PROTECTED YOUR PC" / UNKNOWN PUBLISHER
 
 The executables are not code-signed, so Windows SmartScreen warns about an unknown publisher the first time
-you run them. To avoid it, unblock the zip before you extract it: right-click it, Properties, tick "Unblock"
-at the bottom of the General tab, OK, and then extract it. If you already extracted it, click "More info"
-and then "Run anyway" in the warning (once for each program).
+you run them. To avoid it with the zip, unblock it before you extract it: right-click it, Properties, tick
+"Unblock" at the bottom of the General tab, OK, and then extract it. Otherwise click "More info" and then
+"Run anyway" in the warning (once for each program).
 
 
-OPTIONS IN GH Smash Hits Launcher
+GH VAN HALEN LAUNCHER
 
-- Language: the game's languages.
-- Internal resolution: the game's image rendered at 2x or 3x and fitted to the screen.
-- Anisotropic filtering: 16x by default (sharper textures at oblique angles).
-- Graphics API: DirectX 12 (recommended) or Vulkan.
+The launcher works with the mouse, the keyboard or a controller. Changes are saved automatically and apply
+when you press PLAY.
+
+- Play: starts the game, with your current settings, achievements and updates at a glance. The first time,
+  and after an update of the game or of your graphics driver, it first shows "Compiling shaders" for a
+  moment: it prepares the game's graphics for your graphics card, so that the game does not stutter the
+  first time it shows something (with NativeXRenderer). Skip starts the game at once; it then compiles
+  them as you play.
+- Your profile (your picture at the top right): hours played, streaks, the week's activity, your games
+  and your favorite achievements; edit your name, picture and color, or switch profiles.
+- Achievements: the game's 50 achievements, unlocked or not. In the game, F7 shows the same list.
+- Controls: your guitars, controllers, the keyboard and the microphone.
+  - A guitar or a controller: what each of its buttons does. A guitar's frets are A, B, Y, X and LB of an
+    Xbox controller, strum is the D-pad, the whammy bar the right stick (a controller's, pushed to either
+    side) and Star Power Back. A controller's Instrument: Guitar, or Vocals for the singer (see SINGING).
+    "Strum when a fret is pressed" makes the frets of every controller playing guitar strum as you press
+    them, in songs. Each controller keeps its own assignments. Whammy bar: how far the game reads the bar.
+    If it reads pressed with the bar at rest, or does nothing (some third-party guitars), press Assign,
+    push the bar all the way and hold it, then let it go; X clears the assignment. Tilt: the same, if tilting
+    gives you no Star Power (a Wii or PS3 guitar): press Assign, tilt the neck up as for Star Power and hold it,
+    then go back to your playing position.
+  - Keyboard (experimental): turn on "Play with keyboard and mouse" to play with the keyboard as a guitar
+    (frets D F J K L, strum with the Up and Down arrows, Star Power with Space, Start with Enter), and change
+    any key. "Strum when a fret is pressed" makes each fret strum as you press it, in songs. Shift, Ctrl
+    and Alt can be keys of their own (press and release one alone): each side is a separate key, so Left
+    Alt can be Star Power. F1 to F12 can be assigned too: a key on a control only presses that control.
+  - Microphone (experimental): the microphone you sing with, its channel and gain, and its level (see
+    SINGING).
+- Settings:
+  - Video: the monitor, fullscreen, borderless or window, the resolution, the image format (fill a screen
+    wider than 16:9, where the stage is seen wider while the note highway, the HUD and the menus stay 16:9
+    in the center, or keep 16:9 with bars), the internal resolution the game is drawn at, upscaling (AMD
+    FSR 1 or NVIDIA NIS, from fewer lines than the screen's) and sharpness, and V-Sync (on by default: no
+    tearing, and no extra delay; leave it on with a G-Sync or FreeSync monitor too).
+  - Graphics: the renderer, the frame rate, antialiasing and anisotropic filtering. NativeXRenderer (the
+    default) draws the game natively with Vulkan; Xenos emulates the Xbox 360 GPU instead (DirectX 12 or
+    Vulkan): choose it if something looks wrong with NativeXRenderer, and tell us where. Frame rate: 60 FPS
+    (original), and 120, 144, 160, 165 or 240 FPS where your monitor reaches them (experimental). The songs
+    keep their speed and stay in sync at every frame rate. The game's screen effects can be turned off one by
+    one.
+  - Game: the launcher's language and the game's (English, French, German, Italian or Spanish; the game
+    has no language menu of its own), and Low latency audio (off by default): the game takes your audio
+    device in exclusive mode and the sound comes sooner (about 55 ms on a USB audio interface); other
+    programs cannot play on that device while the game runs. Calibrate the audio again after changing it.
+    Debug keys (off by default): F3, F4 and ` open the developer's windows in the game (frame times,
+    settings, console).
+- Updates: the launcher checks for a new version when it starts (you can turn that off) and installs it
+  for you, keeping your saves, settings and game files.
+
+
+SINGING (EXPERIMENTAL)
+
+Any microphone connected to the PC works as the game's Xbox 360 USB microphone:
+1. In the launcher's Controls tab, choose Microphone (under the keyboard) and pick your microphone, or the
+   Windows default. With an audio interface, pick the channel of the input your microphone is on.
+2. Sing as loud as you will in a song and watch the Level bar: it should reach the yellow without touching
+   the red. Change the Gain if it does not (it starts at -12 dB).
+3. Choose the controller that sings and set its Instrument to Vocals. In Quickplay, that controller sings.
+If the pitch line jumps around, lower the Gain; if the game does not hear you, raise it. Headphones help: with
+speakers, the microphone hears the song too. While a microphone is chosen, Windows shows that the game is using
+it.
+
+
+MORE THAN ONE CONTROLLER
+
+The controller that presses a button at the title screen plays with your profile and its saves. The other
+controllers join as its guests, as on the Xbox 360 ("Name (1)", "Name (2)"): they play without saves of
+their own.
+
+
+QUITTING THE GAME
+
+On the title screen or in the main menu, press B (the red fret): the game asks whether to quit. A (the green
+fret, or Enter) quits, B (or Escape) goes back.
 
 
 STEAM BIG PICTURE
@@ -61,20 +140,37 @@ GH Smash Hits Launcher. You can also add "GH Smash Hits Launcher.exe" to change 
 
 FILES
 
-- ghsmashhits.toml           Base settings. Created with the defaults this game needs if it is missing.
-- ghsmashhits_options.toml   What GH Smash Hits Launcher saves. Loaded after ghsmashhits.toml.
-- logs\                 Log files. Attach the latest one when you report a problem.
-- userdata\             Saves, profile and shader cache. Keep this folder when you update to a new
-                        version (extract the new version over the old one, or copy userdata\ across).
-                        If the game folder cannot be written (for example under Program Files), they
-                        go to Documents\ghsmashhits instead.
+- ghsmashhits.toml          Base settings. Created with the defaults this game needs if it is missing.
+- ghsmashhits_options.toml  What GH Smash Hits Launcher saves. Loaded after ghsmashhits.toml.
+- logs\                     Log files: the game's (ghsmashhits_NNN.log) and the launcher's (launcher_NNN.log,
+                            with a .dmp file when it stopped responding). Attach the latest ones when you report
+                            a problem.
+- userdata\                 The shader cache. Keep this folder if you move the game to another folder. If the
+                            game folder cannot be written (for example under Program Files), it goes to
+                            Documents\ghsmashhits instead.
+- Your saves, achievements and playtime are in your profile: %APPDATA%\ElGuslml Recomps.
 
 Command line options (--name=value, for example in Steam launch options) win over both files, e.g.
---user_language=1 (English).
+--user_language=1 (English), --ghsmashhits_frame_rate=120 or --native_x_renderer=false (the Xenos renderer).
+
+
+REPORTING A PROBLEM
+
+Tell us on Discord (https://discord.gg/XQtM5TmNs8) or open an issue on the project's page, with where in the
+game it happened, a screenshot if you can, and the latest files in the logs folder (the game's and, if the
+launcher misbehaved, the launcher's).
 
 
 KNOWN ISSUES
 
+- Guitar Hero: Smash Hits runs on Guitar Hero: Metallica's engine, with GHMetalRecomp's fixes. Songs have
+  been played with an Xbox 360 guitar; drums and singing have not been tested in this game yet.
+- Singing is experimental: if the pitch line jumps or the game misses your voice, change the microphone's
+  Gain in the launcher.
+- Some USB audio interfaces add delay in Windows' shared audio mode (a Focusrite Scarlett about 20 ms more
+  than a motherboard's audio): calibrate the audio in the game's options.
+- Above 60 FPS is experimental: something may still run too fast. Tell us what and where.
+- Playing with the keyboard is experimental.
 - The first time an effect appears, it may show up a few frames late.
 
 

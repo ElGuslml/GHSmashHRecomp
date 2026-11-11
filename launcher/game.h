@@ -73,10 +73,9 @@ inline constexpr int kFrameHeight = GAME_FRAME_HEIGHT;
 // --- Updates ---
 
 // This project's releases (updater.cpp): GitHub's API for them, newest first, and their page. Empty: the launcher
-// does not look for updates (a private repository), and its Updates page only shows the version. Once the repository
-// is public: "https://api.github.com/repos/<user>/GHSmashHRecomp/releases?per_page=20" and
-// "https://github.com/<user>/GHSmashHRecomp/releases".
-inline constexpr const char* kReleasesApi = "";
+// does not look for updates, and its Updates page only shows the version. Set from the first release on, while the
+// repository is still private (the check fails until it is public, and the releases made then are found).
+inline constexpr const char* kReleasesApi = "https://api.github.com/repos/ElGuslml/GHSmashHRecomp/releases?per_page=20";
 inline constexpr const char* kReleasesPage = "https://github.com/ElGuslml/GHSmashHRecomp/releases";
 
 // --- The game's own options (a cvar each; empty: the game has no such option, and the launcher no row) ---
@@ -121,7 +120,7 @@ inline constexpr const char* kUltrawideCvar = GAME_ULTRAWIDE_CVAR;
 // The languages the game has (game_types.h's Language): the Game page's language row, in this order. Empty: the game
 // asks in its own menu, and the launcher has no row.
 // The disc's text packs (DATA/COMPRESSED/PAK/qs_*.pak.xen): English and French, German, Italian, Spanish (Spain's);
-// the game picks one from XGetLanguage at start (GH Metallica's packs, the same here; not checked in this game yet).
+// the game picks one from XGetLanguage at start (GH Metallica's packs, the same here; checked by Gustavo, 2026-11-09).
 inline constexpr std::array<Language, 5> kLanguages{{
     {3, "Deutsch", nullptr, nullptr},
     {1, "English", nullptr, nullptr},
