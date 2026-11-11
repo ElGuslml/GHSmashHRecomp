@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- icon.svg simplified for 16-32 px: no rivets, rays, glow, sparkles or highlights; a thicker rim and a bigger pick
+       with the record. -->
+  <defs>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f6f8"/>
+      <stop offset="0.5" stop-color="#aab0b7"/>
+      <stop offset="1" stop-color="#5d636b"/>
+    </linearGradient>
+    <linearGradient id="amber" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd866"/>
+      <stop offset="0.55" stop-color="#f5a623"/>
+      <stop offset="1" stop-color="#d0861a"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="128" cy="128" r="122" fill="url(#steel)" stroke="#120c0a" stroke-width="8"/>
+  <circle cx="128" cy="128" r="98" fill="#3a0b0d" stroke="#120c0a" stroke-width="8"/>
+
+  <g transform="translate(128 130) scale(1.16) translate(-128 -131)">
+    <path d="M 128,204 C 100,178 66,140 66,104 C 66,74 98,58 128,58 C 158,58 190,74 190,104
+             C 190,140 156,178 128,204 Z" fill="url(#amber)" stroke="#0d0d0f" stroke-width="9" stroke-linejoin="round"/>
+    <circle cx="128" cy="112" r="37" fill="#141316" stroke="#0d0d0f" stroke-width="7"/>
+    <path d="M 101,96 A 31 31 0 0 1 129,82" fill="none" stroke="#8a8890" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="128" cy="112" r="15" fill="#e0302e"/>
+    <circle cx="128" cy="112" r="4.5" fill="#0b0a0c"/>
+  </g>
+</svg>
