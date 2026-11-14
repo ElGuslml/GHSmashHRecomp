@@ -271,8 +271,8 @@ and the gig posters) stay off. In this game the global is 0 in the scripts thems
 Halen's are 1, set to 0 by `guitar_startup` on the disc), and the main menu's other global, `enable_debug_menus`, is 1.
 Hooks: the interpreter's two expression evaluations in `sub_822D06E0` (0x822D08B0 / 0x822D08B8, 0x822D0BC4 /
 0x822D0BC8) and the `$name` resolve at the entry of `sub_822BE090` (found through GH Van Halen's map; the same
-instructions). Checked: the hooks read the global (the log's "[debug menu]" line at the start); the menu itself not
-seen yet.
+instructions). Checked: the Debug Menu item at the bottom of the main menu, and the debug menu opened from it (Unlock All,
+Repeat Last Song, Settings, Skip Into Song, ...).
 
 ## Skipping the videos at the start
 
@@ -295,7 +295,9 @@ The keyboard's drum keys are its own (D F J K L, four lanes K green; Space the k
 
 ## Online play (experimental)
 
-GH Metallica's of 2026-11-12/13: the game's online modes between friends through Steam, `docs/online-play.md`.
+GH Metallica's of 2026-11-12/13: the game's online modes between friends through Steam, `docs/online-play.md`. The main
+menu says "EN LÍNEA" / "ONLINE" (this game's item asks for the capitals' text, E54F6A42). Checked: two instances on one
+PC through a Pro Face-Off song.
 
 ## The mouse cursor
 

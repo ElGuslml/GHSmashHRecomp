@@ -6,9 +6,12 @@ own parts here: the invite gate (`src/ghsmashhits_app.h`: never during a song no
 wait (`src/matchmaking.cpp`, hook 0x823F8A7C in the matchmaker's constructor sub_823F89D8) and the main menu's item
 (`src/online_text.cpp`, hook 0x823AB56C in sub_823AB560); the rest is the SDK's (changes 89-102).
 
-Not played here yet (2026-11-13): the game's hooks are at the same instructions as GH Metallica's (the matchmaker's
-constructor found by its instructions, the text's function by the function matcher), and the game boots with them; in
-GH Van Halen two instances played a song online, and GH Metallica was tried between two PCs and through Steam.
+Checked here (2026-11-13): two instances on one PC, by address (not Steam): the second was invited into the first's
+party at once, the matchmaking (3 s), the setlist and a Pro Face-Off song with both players, each named on the other's
+highway; logs without errors. Not yet between two PCs nor through Steam in this game (both tried in GH Metallica).
+
+The main menu's item here asks for another text than GH Metallica's: E54F6A42, "XBOX LIVE" in capitals (found with a
+temporary log of the keys the text function was given), so `src/online_text.cpp` gives "ONLINE" for both keys.
 
 ## Setting it up
 
