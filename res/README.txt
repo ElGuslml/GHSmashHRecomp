@@ -54,7 +54,7 @@ you run them. To avoid it with the zip, unblock it before you extract it: right-
 "Run anyway" in the warning (once for each program).
 
 
-GH VAN HALEN LAUNCHER
+GH SMASH HITS LAUNCHER
 
 The launcher works with the mouse, the keyboard or a controller. Changes are saved automatically and apply
 when you press PLAY.
@@ -70,7 +70,9 @@ when you press PLAY.
 - Controls: your guitars, controllers, the keyboard and the microphone.
   - A guitar or a controller: what each of its buttons does. A guitar's frets are A, B, Y, X and LB of an
     Xbox controller, strum is the D-pad, the whammy bar the right stick (a controller's, pushed to either
-    side) and Star Power Back. A controller's Instrument: Guitar, or Vocals for the singer (see SINGING).
+    side) and Star Power Back. A controller's Instrument: Guitar, Drums, or Vocals for the singer (see
+    SINGING). With Drums, Drum kit chooses 5 lanes (Guitar Hero) or 4 lanes (the game's Rock Band highway, as
+    with a Rock Band drum kit on the console); a real drum kit has the same choice.
     "Strum when a fret is pressed" makes the frets of every controller playing guitar strum as you press
     them, in songs. Each controller keeps its own assignments. Whammy bar: how far the game reads the bar.
     If it reads pressed with the bar at rest, or does nothing (some third-party guitars), press Assign,
@@ -82,6 +84,9 @@ when you press PLAY.
     any key. "Strum when a fret is pressed" makes each fret strum as you press it, in songs. Shift, Ctrl
     and Alt can be keys of their own (press and release one alone): each side is a separate key, so Left
     Alt can be Star Power. F1 to F12 can be assigned too: a key on a control only presses that control.
+    Instrument: Drums plays the keyboard as a drum kit with keys of its own (5 lanes: D red, F yellow,
+    J blue, K orange, L green; 4 lanes: K green; Space the kick pedal, Backspace Star Power); your guitar
+    keys stay as they were.
   - Microphone (experimental): the microphone you sing with, its channel and gain, and its level (see
     SINGING).
 - Settings:
@@ -90,18 +95,24 @@ when you press PLAY.
     in the center, or keep 16:9 with bars), the internal resolution the game is drawn at, upscaling (AMD
     FSR 1 or NVIDIA NIS, from fewer lines than the screen's) and sharpness, and V-Sync (on by default: no
     tearing, and no extra delay; leave it on with a G-Sync or FreeSync monitor too).
-  - Graphics: the renderer, the frame rate, antialiasing and anisotropic filtering. NativeXRenderer (the
-    default) draws the game natively with Vulkan; Xenos emulates the Xbox 360 GPU instead (DirectX 12 or
-    Vulkan): choose it if something looks wrong with NativeXRenderer, and tell us where. Frame rate: 60 FPS
-    (original), and 120, 144, 160, 165 or 240 FPS where your monitor reaches them (experimental). The songs
-    keep their speed and stay in sync at every frame rate. The game's screen effects can be turned off one by
-    one.
+  - Graphics: the renderer, the graphics card, the frame rate, antialiasing and anisotropic filtering.
+    NativeXRenderer (the default) draws the game natively with Vulkan; Xenos emulates the Xbox 360 GPU
+    instead (DirectX 12 or Vulkan): choose it if something looks wrong with NativeXRenderer, and tell us
+    where. Graphics card: on a PC with two (a laptop's integrated and dedicated ones), the one the game draws
+    with. Frame rate: 60 FPS (original), and 120, 144, 160, 165 or 240 FPS where your monitor reaches them
+    (experimental). The songs keep their speed and stay in sync at every frame rate. The game's screen effects
+    can be turned off one by one.
   - Game: the launcher's language and the game's (English, French, German, Italian or Spanish; the game
-    has no language menu of its own), and Low latency audio (off by default): the game takes your audio
-    device in exclusive mode and the sound comes sooner (about 55 ms on a USB audio interface); other
-    programs cannot play on that device while the game runs. Calibrate the audio again after changing it.
-    Debug keys (off by default): F3, F4 and ` open the developer's windows in the game (frame times,
-    settings, console).
+    has no language menu of its own). Debug keys (off by default): F3, F4 and ` open the developer's windows
+    in the game (frame times, settings, console). Skip the intro videos (off by default): the game starts at
+    its title screen. Game debug menu (off by default): the debug menu its developers used, in the main menu
+    and the pause menu (its texts in English; Unlock All and the money items change your save).
+  - Audio: the output device (Windows default, or another one), the channels (Automatic, Stereo or Mono:
+    the same sound on both sides), the volume, mute while another window is in front, and Low latency audio
+    (off by default): the game takes your audio device in exclusive mode and the sound comes sooner (about
+    55 ms on a USB audio interface); other programs cannot play on that device while the game runs.
+    Calibrate the audio again after changing it.
+  - Online (experimental): online play with your friends (see ONLINE PLAY).
 - Updates: the launcher checks for a new version when it starts (you can turn that off) and installs it
   for you, keeping your saves, settings and game files.
 
@@ -117,6 +128,19 @@ Any microphone connected to the PC works as the game's Xbox 360 USB microphone:
 If the pitch line jumps around, lower the Gain; if the game does not hear you, raise it. Headphones help: with
 speakers, the microphone hears the song too. While a microphone is chosen, Windows shows that the game is using
 it.
+
+
+ONLINE PLAY (EXPERIMENTAL)
+
+The game's online modes with your Steam friends, without Xbox Live. Everyone needs Steam running and signed
+in, and this same version of the game.
+1. In the launcher's Settings > Online, turn on Online play, on every PC (Through Steam turns on with it).
+2. In the game, choose ONLINE in the main menu, as Xbox LIVE on the console: the party, invites, the modes.
+   Your Steam friends who have the game open are in its friends list: invite them from there.
+3. An invite shows at the top of the screen: hold START (or Enter) for 2 seconds to join.
+You can also invite a friend from Steam's friends list (Invite to game), or join a friend there (Join game):
+the game takes you to their party. No port needs opening: Steam carries the game between you. Steam shows you
+playing "Spacewar" (Valve's test app, which games without a Steam page of their own use).
 
 
 MORE THAN ONE CONTROLLER

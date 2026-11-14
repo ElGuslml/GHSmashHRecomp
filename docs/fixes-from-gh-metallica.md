@@ -1,7 +1,10 @@
 # The fixes ported from GH Metallica
 
 **Status: ported on 2026-11-05; played with an Xbox 360 guitar (2026-11-09: songs at 160 FPS, NativeXRenderer, ultrawide; the
-languages, Low latency audio and the installation from an ISO tried too). Drums and singing not tried yet.** Guitar Hero: Smash Hits is Guitar Hero:
+languages, Low latency audio and the installation from an ISO tried too). Drums and singing not tried yet. On
+2026-11-13 GH Metallica's 1.0.0-beta.1 work came too: the game's debug menu, skipping the videos at the start, drums on
+five or four lanes, online play, the red border at ultrawide, the mouse cursor, Settings > Audio and the graphics card
+(below; not played yet).** Guitar Hero: Smash Hits is Guitar Hero:
 Metallica's engine (the executable `gh4_2_Final.exe`, between Metallica's `gh4_1_burn_Final.exe` and Van Halen's
 `gh4_3_Final.exe`; all XDK 2.0.7978), by another studio: 99.8 % of its functions have the same instructions as in GH
 Metallica (98.9 % between GH Metallica and GH Van Halen), and 97 % of its scripts exist there, 91 % of those
@@ -195,14 +198,23 @@ uses change nothing here (they are listed there). **Off:** `ghsmashhits_greatest
 
 ## Ultrawide
 
-The same as GH Metallica's (`src/widescreen.cpp`, 8 hooks): every 16:9 perspective is widened by the screen's factor
+The same as GH Metallica's (`src/widescreen.cpp`, 9 hooks): every 16:9 perspective is widened by the screen's factor
 when the engine builds it (`sub_82356DA8`, Hor+), and the 2D layer (sprites, text, the highway's board, the tails, the
-hit sparks, the loading screens, the clip windows) is narrowed to 16:9 in the center; outside a song black bars cover
+tap notes' trail, the hit sparks, the loading screens, the clip windows) is narrowed to 16:9 in the center; outside a song black bars cover
 the sides. With NativeXRenderer the image is rendered at the screen's aspect ratio, or at another one (16:9, 21:9,
 32:9; NativeXRenderer D104, `native_x_renderer_aspect`, the launcher's image format), and the menus' bars are placed
 at the sides of the image, not of the window. **Off:** 16:9 in the launcher
 (`ghsmashhits_ultrawide = false`); `ghsmashhits_ultrawide_hud = false` stretches the 2D layer; `ghsmashhits_menu_bars =
 false` shows the room behind the menus at their sides.
+
+The tap notes' trail (GH Metallica's fix of 2026-11-12, ported 2026-11-13): the line joining tap notes is drawn from
+control points in canvas pixels (`sub_821B7890`, the same code as GH Metallica's `sub_821B69B0`) that were not narrowed
+with their gems, so at 21:9 it ran beside its highway, far off with two players. `GHSmashHitsTapTrailHook` (0x821B7FBC)
+narrows the points once before the first batch.
+
+The red border while the band is failing (GH Metallica's fix of 2026-11-13): in a song, a 2D overlay over the whole
+screen covers the whole width instead of a red frame around the middle 16:9 (the sprite hook leaves the pieces of such
+an overlay as they are; `ghsmashhits_ultrawide_overlays`). Not seen in this game yet.
 
 ## Turning off the screen effects
 
@@ -246,3 +258,52 @@ to take it. The same engine here, so the same two fixes:
 - `ghsmashhits_job_wake_one` (on; `src/thread_waits.cpp`, the job event's pulse hooked): one waiting worker is woken per
   job. GH Metallica: each worker 5,300 -> 3,400 wakes a second, 1.98 -> 1.84 cores.
 Not measured here yet. Off: `critical_section_spin_us = 0`, `ghsmashhits_job_wake_one = false`.
+
+## The game's debug menu
+
+**Option, off by default** (GH Metallica's of 2026-11-11): the launcher's Settings → Game → "Game debug menu", or
+`ghsmashhits_debug_menu = true`. The main menu gets a Debug Menu item and the pause menu one too: Neversoft's debug menu
+(Unlock All, Test Song, Settings with Toggle Bot / Show Song Time / Change Venue / Select Slomo, Skip Into Song, ...;
+its texts in English, some items need the developers' tools). GH Metallica's `docs/debug-menu.md` describes it.
+`src/debug_menu.cpp`: the script global `enable_button_cheats` reads as 1 only in the scripts that build the main menu
+and the pause menu, so the development shortcuts the same global turns on (songs unlocked or completed from the setlist
+and the gig posters) stay off. In this game the global is 0 in the scripts themselves (GH Metallica's and GH Van
+Halen's are 1, set to 0 by `guitar_startup` on the disc), and the main menu's other global, `enable_debug_menus`, is 1.
+Hooks: the interpreter's two expression evaluations in `sub_822D06E0` (0x822D08B0 / 0x822D08B8, 0x822D0BC4 /
+0x822D0BC8) and the `$name` resolve at the entry of `sub_822BE090` (found through GH Van Halen's map; the same
+instructions). Checked: the hooks read the global (the log's "[debug menu]" line at the start); the menu itself not
+seen yet.
+
+## Skipping the videos at the start
+
+**Option, off by default** (GH Metallica's of 2026-11-11): Settings → Game → "Skip the intro videos", or
+`ghsmashhits_skip_intro = true`. After its legal notice (6 s more once loaded) this game plays four videos:
+Activision's, RedOctane's, Beenox's (`bx_logo`, this game's developer) and Neversoft's logos, then its title screen (its
+intro, `band_intro`, has a state that nothing leads to). `src/intro.cpp` makes the script function PlayMovie (hook
+0x823CE8B0 in `sub_823CE830`) find none of the four the first time each is asked for, so each boot state moves on at
+once, and the legal notice's wait is 0 (a hook on Wait's seconds branch, 0x82393BEC in `sub_823939B8`: GH Metallica's
+shares it with its crowd's claps, which this game does not need). The log says "[intro] boot video '...' skipped" for
+each. Checked: the title screen about 12 s after the start, with both renderers.
+
+## Drums, five or four lanes
+
+GH Metallica's of 2026-11-11 (SDK change 87, launcher 3.19.1; its `docs/drums.md`): Controls → a controller or the
+keyboard → Instrument: Drums, then Drum kit: 5 lanes (Guitar Hero) or 4 lanes (the game's Rock Band highway, as a Rock
+Band kit on the console). The same game code as GH Metallica's (the engine's drum kit types and `UseFourLaneHighway`).
+The keyboard's drum keys are its own (D F J K L, four lanes K green; Space the kick, Backspace Star Power;
+`launcher/game.h`). Not played here (nor in GH Metallica yet). **Off:** Instrument: Guitar.
+
+## Online play (experimental)
+
+GH Metallica's of 2026-11-12/13: the game's online modes between friends through Steam, `docs/online-play.md`.
+
+## The mouse cursor
+
+Hidden over the game after 2 seconds without moving it (SDK change 103): `docs/mouse-cursor.md`.
+
+## Settings > Audio and the graphics card
+
+Launcher 3.19 (SDK changes 85 and 86; GH Metallica's `docs/audio-and-gpu.md`): Settings → Audio (the output device by
+name, the channels, the volume, mute while another window is in front, low latency audio moved there from Game) and
+Settings → Graphics → the graphics card. Nothing of the game's own: the SDK reads `audio_output_device`,
+`audio_channels`, `audio_volume`, `audio_mute_unfocused` and `gpu_adapter`.

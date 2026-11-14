@@ -64,11 +64,15 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${GHSMASHHITS_SO
 
 # Sources
 set(GHSMASHHITS_SOURCES
+    src/debug_menu.cpp
     src/fmod_mix.cpp
     src/framerate.cpp
+    src/intro.cpp
     src/keyboard.cpp
     src/main.cpp
+    src/matchmaking.cpp
     src/native_x_renderer_ghsmashhits.cpp
+    src/online_text.cpp
     src/options.cpp
     src/players.cpp
     src/quit_prompt.cpp

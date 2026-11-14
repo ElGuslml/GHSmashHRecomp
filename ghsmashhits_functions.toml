@@ -143,6 +143,10 @@ address = 0x821B6954   # bl DrawVerticesUP in sub_821B5E90 (a sustained note's t
 name = "GHSmashHitsTailHook"
 registers = ["r5", "r6", "r7"]
 [[midasm_hook]]
+address = 0x821B7FBC   # lwz r11,12640(r20) in sub_821B7890 (the tap notes' trail: its control points at r1 + 544)
+name = "GHSmashHitsTapTrailHook"
+registers = ["r1"]
+[[midasm_hook]]
 address = 0x821B4378   # bl EndVertices in sub_821B3DB8 (a sprite drawn as a grid of quads, the highway's board: r3 = device)
 name = "GHSmashHitsMeshSpriteHook"
 registers = ["r3"]
@@ -280,3 +284,51 @@ registers = ["r31"]
 address = 0x82382CEC   # rlwinm r11,r3,24,24,31 (sub_82382C20: r3 = XGetGameRegion's answer, its high byte the territory)
 name = "GHSmashHitsGameRegionHook"
 registers = ["r3"]
+
+# GH Metallica's of 2026-11-11/13, at the instructions tools/port/fmatch.py found (the matchmaker's constructor, the
+# script's "$name" resolve and its expression evaluation through GH Van Halen's map or by their instructions: the same
+# instructions but for a data address).
+[[midasm_hook]]
+address = 0x823F8A7C   # mr r3,r31 at the end of sub_823F89D8 (the online matchmaker's constructor: its times read)
+name = "GHSmashHitsMatchmakerHook"
+registers = ["r31"]
+[[midasm_hook]]
+address = 0x823AB56C   # stw r3,116(r1) in sub_823AB560 (a text's key -> its text in the player's language: r3 = the key)
+name = "GHSmashHitsTextKeyHook"
+registers = ["r3"]
+
+# The game's debug menu offered in the main and pause menus (src/debug_menu.cpp, ghsmashhits_debug_menu): the script
+# global enable_button_cheats reads as 1 only in the scripts that build those menus. The script interpreter's
+# statement (sub_822D06E0, r31 = the script) evaluates expressions with sub_823AF960 at two places (none of these
+# addresses is a branch target); sub_822BE090 resolves a "$name" component (r3) to the global's value.
+[[midasm_hook]]
+address = 0x822D08B0   # lwz r3,16(r31), before bl 0x823AF960 at 0x822D08B4
+name = "GHSmashHitsScriptEvalEnterHook"
+registers = ["r31"]
+[[midasm_hook]]
+address = 0x822D08B8   # stw r3,16(r31), after it
+name = "GHSmashHitsScriptEvalLeaveHook"
+[[midasm_hook]]
+address = 0x822D0BC4   # bl 0x823AF960 (the other evaluation, reached past bne 0x822D0BD0)
+name = "GHSmashHitsScriptEvalEnterHook"
+registers = ["r31"]
+[[midasm_hook]]
+address = 0x822D0BC8   # stw r3,16(r31), after it
+name = "GHSmashHitsScriptEvalLeaveHook"
+[[midasm_hook]]
+address = 0x822BE090   # lbz r11,2(r3) (the entry of sub_822BE090): r3 = the component
+name = "GHSmashHitsGlobalResolveHook"
+registers = ["r3"]
+return_on_true = true
+
+# The boot's videos skipped (src/intro.cpp, ghsmashhits_skip_intro): PlayMovie (sub_823CE830) has read its `movie`
+# string into 84(r1); r3 = found. Not found returns false without playing. And the legal notice's wait: the script
+# function Wait (sub_823939B8), its seconds branch: r4 = the wait in ms, r30 = the script.
+[[midasm_hook]]
+address = 0x823CE8B0   # clrlwi r11,r3,24 (then beq 0x823CE88C: return 0)
+name = "GHSmashHitsPlayMovieHook"
+registers = ["r1", "r3"]
+[[midasm_hook]]
+address = 0x82393BEC   # bne cr6,0x82393B50 (sub_823939B8, the script function Wait, its seconds branch)
+name = "GHSmashHitsScriptWaitSecondsHook"
+registers = ["r4", "r30"]

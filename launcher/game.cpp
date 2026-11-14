@@ -21,6 +21,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "Film grain", "The grain over the image. Needs the color correction.",
           "Vignette", "Darker corners, where a venue turns it on.",
           "Ink blotches", "The ink effect a song adds over the image.",
+          "Skip the intro videos", "The game starts at its title screen, without the logos and the intro.",
+          "Game debug menu", "The developers' debug menu in the main menu and the pause menu.",
       },
       .toggle_help = {
           "The halo of light around the stage's lights, the pyrotechnics and the brightest surfaces. Off, the image is sharper and flatter.",
@@ -29,6 +31,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "A fine moving grain over the image, as on film. It only shows with the color correction on.",
           "Darkens the corners of the image in the venues and moments that use it.",
           "The black ink blotches the game paints over the image during a song.",
+          "Skips the logos and the game's intro video at each start, and the legal notice's wait once the game has loaded: the game opens at its title screen.",
+          "Adds a Debug Menu item to the main menu and the pause menu: the menu the game's developers used (Unlock All, Skip Into Song, the bot, the song's time, the venue, the FPS, ...). Its texts are in English, some items do nothing without the developers' tools, and Unlock All and the money items change your save as playing does.",
       },
       .done_title = "The stage is yours!",
       .done_text = "The game was installed. Go play now, or first review the video, graphics and instrument settings; "
@@ -52,6 +56,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "Filmkörnung", "Die Körnung über dem Bild. Braucht die Farbkorrektur.",
           "Vignette", "Dunklere Ecken, wo ein Ort sie einschaltet.",
           "Tintenflecken", "Der Tinteneffekt, den ein Song über das Bild legt.",
+          "Intro-Videos überspringen", "Das Spiel startet am Titelbildschirm, ohne Logos und Intro.",
+          "Debug-Menü des Spiels", "Das Debug-Menü der Entwickler im Hauptmenü und im Pausenmenü.",
       },
       .toggle_help = {
           "Der Lichtschein um die Bühnenlichter, die Pyrotechnik und die hellsten Flächen. Aus wirkt das Bild schärfer und flacher.",
@@ -60,6 +66,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "Eine feine, bewegte Körnung über dem Bild, wie bei Film. Nur mit eingeschalteter Farbkorrektur sichtbar.",
           "Dunkelt die Bildecken an den Orten und in den Momenten ab, die sie verwenden.",
           "Die schwarzen Tintenflecken, die das Spiel während eines Songs über das Bild malt.",
+          "Überspringt bei jedem Start die Logos und das Intro-Video des Spiels, und nach dem Laden die Wartezeit des rechtlichen Hinweises: Das Spiel öffnet am Titelbildschirm.",
+          "Fügt dem Hauptmenü und dem Pausenmenü den Eintrag Debug Menu hinzu: das Menü der Entwickler des Spiels (Unlock All, Skip Into Song, der Bot, die Songzeit, der Auftrittsort, die FPS, ...). Seine Texte sind englisch, manche Einträge tun ohne die Werkzeuge der Entwickler nichts, und Unlock All und die Geld-Einträge ändern deinen Spielstand wie das Spielen.",
       },
       .done_title = "Die Bühne gehört dir!",
       .done_text = "Das Spiel wurde installiert. Leg gleich los oder sieh dir zuerst die Video-, Grafik- und "
@@ -83,6 +91,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "Grain", "Le grain sur l'image. Nécessite la correction des couleurs.",
           "Vignettage", "Des coins plus sombres, là où une salle l'active.",
           "Taches d'encre", "L'effet d'encre qu'un morceau ajoute sur l'image.",
+          "Passer les vidéos d'intro", "Le jeu démarre sur son écran titre, sans les logos ni l'intro.",
+          "Menu de débogage du jeu", "Le menu de débogage des développeurs dans le menu principal et le menu pause.",
       },
       .toggle_help = {
           "Le halo autour des lumières de la scène, de la pyrotechnie et des surfaces les plus claires. Désactivé, l'image est plus nette et plus plate.",
@@ -91,6 +101,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "Un grain fin et animé sur l'image, comme sur pellicule. Il n'apparaît qu'avec la correction des couleurs activée.",
           "Assombrit les coins de l'image dans les salles et les moments qui l'utilisent.",
           "Les taches d'encre noire que le jeu peint sur l'image pendant un morceau.",
+          "Passe à chaque démarrage les logos et la vidéo d'intro du jeu, ainsi que l'attente de la mention légale une fois le jeu chargé : le jeu s'ouvre sur son écran titre.",
+          "Ajoute l'entrée Debug Menu au menu principal et au menu pause : le menu des développeurs du jeu (Unlock All, Skip Into Song, le bot, le temps du morceau, la salle, les FPS, ...). Ses textes sont en anglais, certaines entrées ne font rien sans les outils des développeurs, et Unlock All et les entrées d'argent modifient votre sauvegarde comme le jeu.",
       },
       .done_title = "La scène est à vous !",
       .done_text = "Le jeu a été installé. Allez jouer tout de suite, ou vérifiez d'abord les réglages vidéo, "
@@ -115,6 +127,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "Grano de película", "El grano sobre la imagen. Necesita la corrección de color.",
           "Viñeta", "Esquinas más oscuras, donde un escenario la activa.",
           "Manchas de tinta", "El efecto de tinta que una canción añade sobre la imagen.",
+          "Saltar los videos de introducción", "El juego empieza en su pantalla de inicio, sin los logos ni la intro.",
+          "Menú de depuración del juego", "El menú de depuración de los desarrolladores en el menú principal y en el de pausa.",
       },
       .toggle_help = {
           "El halo de luz alrededor de las luces del escenario, la pirotecnia y las superficies más brillantes. Desactivado, la imagen se ve más nítida y plana.",
@@ -123,6 +137,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "Un grano fino y en movimiento sobre la imagen, como en una película. Solo se ve con la corrección de color activada.",
           "Oscurece las esquinas de la imagen en los escenarios y momentos que la usan.",
           "Las manchas de tinta negra que el juego pinta sobre la imagen durante una canción.",
+          "Salta en cada inicio los logos y el video de introducción del juego, y la espera del aviso legal una vez que el juego cargó: el juego abre en su pantalla de inicio.",
+          "Añade la opción Debug Menu al menú principal y al de pausa: el menú que usaban los desarrolladores del juego (Unlock All, Skip Into Song, el bot, el tiempo de la canción, el escenario, los FPS, ...). Sus textos están en inglés, algunas opciones no hacen nada sin las herramientas de los desarrolladores, y Unlock All y las de dinero cambian tu partida guardada como jugar.",
       },
       .done_title = "¡El escenario es tuyo!",
       .done_text = "El juego se instaló correctamente. Puedes salir a tocar ya o revisar primero los ajustes de video, "
@@ -147,6 +163,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "Grana", "La grana sull'immagine. Richiede la correzione del colore.",
           "Vignettatura", "Angoli più scuri, dove un locale la attiva.",
           "Macchie d'inchiostro", "L'effetto d'inchiostro che una canzone aggiunge all'immagine.",
+          "Salta i video introduttivi", "Il gioco parte dalla schermata del titolo, senza i loghi né l'intro.",
+          "Menu di debug del gioco", "Il menu di debug degli sviluppatori nel menu principale e nel menu di pausa.",
       },
       .toggle_help = {
           "L'alone di luce attorno alle luci del palco, alla pirotecnica e alle superfici più luminose. Disattivato, l'immagine è più nitida e piatta.",
@@ -155,6 +173,8 @@ const GameTexts& GameTextsFor(uint32_t language) {
           "Una grana fine e in movimento sull'immagine, come su pellicola. Si vede solo con la correzione del colore attiva.",
           "Scurisce gli angoli dell'immagine nei locali e nei momenti che la usano.",
           "Le macchie d'inchiostro nero che il gioco dipinge sull'immagine durante una canzone.",
+          "Salta a ogni avvio i loghi e il video introduttivo del gioco, e l'attesa dell'avviso legale una volta caricato il gioco: il gioco si apre sulla schermata del titolo.",
+          "Aggiunge la voce Debug Menu al menu principale e al menu di pausa: il menu degli sviluppatori del gioco (Unlock All, Skip Into Song, il bot, il tempo della canzone, il locale, gli FPS, ...). I suoi testi sono in inglese, alcune voci non fanno nulla senza gli strumenti degli sviluppatori, e Unlock All e le voci dei soldi cambiano il tuo salvataggio come giocare.",
       },
       .done_title = "Il palco è tuo!",
       .done_text = "Il gioco è stato installato. Vai a suonare subito o controlla prima le impostazioni video, grafiche e "
@@ -242,7 +262,83 @@ std::vector<GameControlGroup> Guitar(const ControlWords& w) {
   };
 }
 
+// One language's words for the drums' functions.
+struct DrumWords {
+  const char* pads;
+  const char* kick_group;
+  const char* menus;
+  const char* red;
+  const char* yellow_cymbal;
+  const char* yellow_pad;
+  const char* blue;
+  const char* orange;
+  const char* green;
+  const char* kick;
+  const char* kick_chip;
+  const char* dpad_up;
+  const char* dpad_down;
+};
+
+// The game's drums on the Xbox 360 controller, in the highway's order: a Guitar Hero kit's pads on B, Y, X and A, its
+// orange cymbal on RB and its kick pedal on LB; a Rock Band kit (four lanes) has no orange. Star Power on Back; the
+// menus on the D-pad and Start.
+std::vector<GameControlGroup> Drums(const DrumWords& w, bool four) {
+  std::vector<GameControl> pads = {
+      {int(Bind::kB), "", kRed, kOnFret, w.red},
+      {int(Bind::kY), "", kYellow, kOnFret, four ? w.yellow_pad : w.yellow_cymbal},
+      {int(Bind::kX), "", kBlue, kOnFret, w.blue},
+  };
+  if (!four) pads.push_back({int(Bind::kRightShoulder), "", kOrange, kOnFret, w.orange});
+  pads.push_back({int(Bind::kA), "", kGreen, kOnFret, w.green});
+  return {
+      {w.pads, pads},
+      {w.kick_group,
+       {
+           {int(Bind::kLeftShoulder), w.kick_chip, kGrey, kOnGrey, w.kick},
+           {int(Bind::kBack), "SP", kGrey, kOnStarPower, "Star Power"},
+       }},
+      {w.menus,
+       {
+           {int(Bind::kDpadUp), "\xE2\x86\x91", kGrey, kOnGrey, w.dpad_up, w.dpad_up},
+           {int(Bind::kDpadDown), "\xE2\x86\x93", kGrey, kOnGrey, w.dpad_down, w.dpad_down},
+           {int(Bind::kStart), "START", kGrey, kOnGrey, "Start"},
+       }},
+  };
+}
+
 }  // namespace
+
+const std::vector<GameControlGroup>& GameDrumControlsFor(uint32_t language, bool four_lanes) {
+  static const DrumWords kEnglish{"Drums \xC2\xB7 Pads", "Drums \xC2\xB7 Kick and Star Power", "Menus", "Red pad",
+                                  "Yellow cymbal", "Yellow pad", "Blue pad", "Orange cymbal", "Green pad",
+                                  "Kick pedal", "KICK", "D-pad up", "D-pad down"};
+  static const DrumWords kGerman{"Schlagzeug \xC2\xB7 Pads", "Schlagzeug \xC2\xB7 Bass und Star Power", "Menüs",
+                                 "Rotes Pad", "Gelbes Becken", "Gelbes Pad", "Blaues Pad", "Oranges Becken",
+                                 "Grünes Pad", "Bassdrum-Pedal", "BASS", "Steuerkreuz hoch", "Steuerkreuz runter"};
+  static const DrumWords kFrench{"Batterie \xC2\xB7 Pads", "Batterie \xC2\xB7 Grosse caisse et Star Power", "Menus",
+                                 "Pad rouge", "Cymbale jaune", "Pad jaune", "Pad bleu", "Cymbale orange", "Pad vert",
+                                 "Pédale de grosse caisse", "GC", "Croix haut", "Croix bas"};
+  static const DrumWords kSpanish{"Batería \xC2\xB7 Pads", "Batería \xC2\xB7 Bombo y Star Power", "Menús",
+                                  "Pad rojo", "Platillo amarillo", "Pad amarillo", "Pad azul", "Platillo naranja",
+                                  "Pad verde", "Pedal del bombo", "BOMBO", "Cruceta arriba", "Cruceta abajo"};
+  static const DrumWords kItalian{"Batteria \xC2\xB7 Pad", "Batteria \xC2\xB7 Cassa e Star Power", "Menu",
+                                  "Pad rosso", "Piatto giallo", "Pad giallo", "Pad blu", "Piatto arancione",
+                                  "Pad verde", "Pedale della cassa", "CASSA", "Croce su", "Croce giù"};
+  const DrumWords& words = language == 3   ? kGerman
+                           : language == 4 ? kFrench
+                           : language == 5 ? kSpanish
+                           : language == 6 ? kItalian
+                                           : kEnglish;
+  // Built once per language and kind of kit.
+  static std::vector<GameControlGroup> built[7][2];
+  static bool done[7][2] = {};
+  const uint32_t index = language < 7 ? language : 1;
+  if (!done[index][four_lanes]) {
+    built[index][four_lanes] = Drums(words, four_lanes);
+    done[index][four_lanes] = true;
+  }
+  return built[index][four_lanes];
+}
 
 const std::vector<GameControlGroup>& GameControlsFor(uint32_t language) {
   static const std::vector<GameControlGroup> kEnglish = Guitar({

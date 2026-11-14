@@ -9,6 +9,7 @@
 #include <rex/kernel/xam/module.h>
 #include <rex/logging.h>
 #include <rex/system/kernel_state.h>
+#include <rex/system/online/session_service.h>
 #include <rex/system/xthread.h>
 #include <rex/ui/imgui_dialog.h>
 
@@ -92,6 +93,12 @@ class GhsmashhitsApp : public rex::ReXApp {
       ghsmashhits::SetOutputSize(window()->GetActualPhysicalWidth(), window()->GetActualPhysicalHeight());
     }
     ghsmashhits::InitializeKeyboard();
+    // Online play: a friend's invite shows at once (a card, START held to join; rex/ui/overlay/invite_prompt.h), and
+    // an accepted one is told to the game only in the menus: never over the highway, nor while a loading screen is
+    // up (GH Metallica's: told while it loaded its menus after leaving a song, the game joined the party as the lobby
+    // menu was being built and crashed).
+    rex::system::online::SessionService::SetDefaultInviteGate(
+        [] { return !ghsmashhits::SongShown() && !ghsmashhits::LoadingShown(); });
   }
   void OnWindowPixelSizeChanged(uint32_t pixel_width, uint32_t pixel_height) override {
     ghsmashhits::SetOutputSize(pixel_width, pixel_height);

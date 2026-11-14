@@ -204,6 +204,21 @@ ghsmashhits_fx_grain = true
 ghsmashhits_fx_color = true
 ghsmashhits_fx_vignette = true
 ghsmashhits_fx_ink = true
+# The game's own debug menu (the engine's, src/debug_menu.cpp): true adds a Debug item to the main menu and the pause
+# menu (Unlock All, Skip Into Song, Settings with Toggle Bot, Show Song Time, Change Venue, ...). The development
+# shortcuts the same switch had (unlocking or completing songs from the setlist) stay off. Some items need the
+# developers' tools and do nothing. false = as on the console.
+ghsmashhits_debug_menu = false
+# The videos at the start (the logos, the game's intro) skipped, and the legal notice not waited for once the game has
+# loaded: the game starts at its title screen (src/intro.cpp). false = as on the console.
+ghsmashhits_skip_intro = false
+# The main menu's online item named "ONLINE" (the game's own PlayStation 3 text, in the game's language), as online
+# play here is through Steam (src/online_text.cpp). false = "Xbox LIVE", as on the console.
+ghsmashhits_online_text = true
+# The mouse cursor hidden over the game after cursor_auto_hide_ms without moving it (shown again when it moves, while
+# another window has the focus, and over the SDK's overlays). false = always shown.
+cursor_auto_hide = true
+cursor_auto_hide_ms = 2000
 )";
 
 uint32_t Crc32(const std::vector<char>& data) {
