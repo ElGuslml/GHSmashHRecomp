@@ -23,6 +23,9 @@
 ; uninstall entry.
 #define RepoUrl "https://github.com/ElGuslml/GHSmashHRecomp"
 
+; The file's version takes numbers alone: 1.0.0 for "1.0.0-beta.1".
+#define FileVersion Copy(AppVersion, 1, Pos("-", AppVersion + "-") - 1)
+
 [Setup]
 ; Never change the AppId: Windows knows the installation by it, and a newer installer finds the older one with it.
 AppId={{CF3C1D25-6D36-4533-8E28-EA99CFDC3759}
@@ -35,7 +38,7 @@ AppPublisherURL={#RepoUrl}
 AppSupportURL={#RepoUrl}/issues
 AppUpdatesURL={#RepoUrl}/releases
 #endif
-VersionInfoVersion={#AppVersion}.0
+VersionInfoVersion={#FileVersion}.0
 VersionInfoDescription={#AppName} (Recomp) setup
 PrivilegesRequired=lowest
 DefaultDirName={autopf}\GHSmashHRecomp
